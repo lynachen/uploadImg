@@ -1,0 +1,106 @@
+.m-navbar:after {
+	display: none;
+}
+.main-wrap .main {
+	background-color: #fff;
+	margin: .2rem;
+}
+/*上传图片*/
+.main .tlt {
+	padding: .3rem .2rem;
+	font-size: .3rem;
+	text-align: center;
+}
+.main .main-img {
+	margin-top: .2rem;
+    padding-bottom: .4rem;
+}		
+.btn-add {
+    position: relative;
+    width: 2rem;
+    height: 2rem;
+    border: 1px dashed #d2d2d2;
+    background-color: #eee;
+    border-radius: 4px;
+    margin-left: .3rem;
+}			
+.btn-add input {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 2;
+	opacity: 0;
+}
+.btn-add .add {
+    position: absolute;
+    width: 100%;
+    background: url(https://lynachen.github.io/plug-ins/img/add.png) no-repeat top center;
+    background-size: .8rem;
+    padding-top: 1rem;
+    text-align: center;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+}			
+.list-imgs {
+    display: flex;
+    flex-wrap: wrap;
+	padding: 0 5%;
+}			
+.list-imgs li {
+    width: 45%;
+    height: 3rem;
+    position: relative;
+    display: inline-block;
+    border: 1px dashed #d2d2d2;
+    border-radius: 4px;
+    margin-bottom: .2rem;
+}
+.list-imgs li:nth-child(odd) {
+	margin-right: 10%;
+}
+.list-imgs li .show-img {
+	position: absolute;
+	text-align: center;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 6;
+    max-width: 100%;
+    max-height: 100%;	
+}
+.list-imgs li .del {
+    position: absolute;
+    top: .1rem;
+    right: .1rem;
+    width: 20px;
+    height: 20px;
+    z-index: 10;
+}
+
+.list-imgs li:first-child img.left {
+	opacity: .6;
+	cursor: no-drop;
+}
+
+.list-imgs li:last-child img.right {
+	opacity: .6;
+	cursor: no-drop;
+}
+
+.btns {
+	margin: .4rem;
+	text-align: center;
+}
+.btns a {
+    display: inline-block;
+    height: auto;
+    padding: .12rem .6rem;
+    font-size: .28rem;
+}
+.btns a.btn-confirm {
+	margin-right: .5rem;
+}

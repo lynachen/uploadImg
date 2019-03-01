@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>上传图片</title>
+	<meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <!-- 删除默认的苹果工具栏和菜单栏 -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<!-- 在web app应用下状态条（屏幕顶部条）的颜色 -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<!-- 禁止了把数字转化为拨号链接 -->
+	<meta name="format-detection" content="telephone=no">   	
+    <!-- 引入YDUI样式 -->
+    <link rel="stylesheet" href="https://lynachen.github.io/plug-ins/ydui-0.1.3/css/ydui.css">    
+    <!-- 引入自定义样式 -->
+    <link rel="stylesheet" href="https://lynachen.github.io/plug-ins/common.css" />
+    <link rel="stylesheet" href="/uploadImg/css/index.css" />
+
+    <!-- 引入YDUI自适应解决方案类库 -->
+    <script src="https://lynachen.github.io/plug-ins/ydui-0.1.3/js/ydui.flexible.js"></script>     
+</head>
+<body>
+<div id="app">	
+	<section class="g-flexview">
+        <header class="m-navbar">
+	        <!--<a href="javascript:window.history.go(-1)" class="navbar-item">
+                <i class="back-ico"></i>
+            </a>-->
+            <div class="navbar-center">
+                <span class="navbar-title">上传图片</span>
+            </div>        	
+        </header>
+        <!--校区列表-->
+        <div class="g-scrollview main-bg">
+            <div id="J_List" class="main-wrap">
+            	<div class="main">
+            		<div class="tlt">上传图片</div>
+            		<div class="main-img">
+            			<div class="img-wrap">
+	            			<!--图片列表-->
+							<ul id="imgList" class="list-imgs"></ul>	
+							<!--按钮列表-->
+							<div id="btnList"></div>
+						</div>
+						<!--增加图片-->
+						<div class="btn-add">
+							<input type="file" id="btnAdd" value="" multiple />
+							<span class="add">添加图片</span>
+						</div>
+			
+						<!--<button class="btn" id="submit">开始上传</button>-->
+					</div>
+				</div> 
+				<div class="btns">
+					<a href="javascript:;" class="btn btn-primary btn-confirm" id="submit">确认</a>
+					<a href="javascript:;" class="btn btn-hollow btn-cancel">取消</a>
+				</div>
+            </div>
+        </div>
+</div>
+
+	<!-- 引入jQuery 2.0+ -->
+	<script src="https://lynachen.github.io/plug-ins/jquery-2.1.4/jquery.min.js"></script>
+	<!-- 引入YDUI脚本 -->
+	<script src="https://lynachen.github.io/plug-ins/ydui-0.1.3/js/ydui.js"></script>
+
+	<script>
+	window.onload = function() {
+		var input = document.getElementById("btnAdd");
+		var imgList = document.getElementById("imgList");
+		var result;
+		var dataArr = []; // 储存所选图片的结果(文件名和base64数据)
+		var fd; //FormData方式发送请求
+		var btnList = document.getElementById("btnList");
+		var oSubmit = document.getElementById("submit");
+		var dateli, dateinput;
+		function randomString(len) {　　
+			len = len || 32;　　
+			var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'; /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/ 　　
+			var maxPos = $chars.length;　　
+			var pwd = '';　　
+			for(i = 0; i < len; i++) {　　　　
+				pwd += $chars.charAt(Math.floor(Math.random() * maxPos));　　
+			}　　
+			return pwd;
+		}
+		console.log()
+		if(typeof FileReader === 'undefined') {
+			alert("抱歉，你的浏览器不支持 FileReader");
+			input.setAttribute('disabled', 'disabled');
+		} else {
+			input.addEventListener('change', readFile, false);
+		}
+
+		function readFile() {
+			fd = new FormData();
+			var iLen = this.files.length;
+			var index = 0;
+			var currentReViewImgIndex = 0;
+			for(var i = 0; i < iLen; i++) {
+				if(!input['value'].match(/.jpg|.gif|.png|.jpeg|.bmp/i)) {　　 //判断上传文件格式
+					return alert("上传的图片格式不正确，请重新选择");
+				}
+				var reader = new FileReader();
+				reader.index = i;
+				fd.append(i, this.files[i]);
+				reader.readAsDataURL(this.files[i]); //转成base64
+				reader.fileName = this.files[i].name;
+				reader.files = this.files[i];
+				reader.onload = function(e) {
+					var imgMsg = {
+						name: randomString(5), //获取文件名
+						base64: this.result, //reader.readAsDataURL方法执行完后，base64数据储存在reader.result里
+					}
+					dataArr.push(imgMsg);
+					for(var j = 0; j < dataArr.length; j++) {
+						currentReViewImgIndex = j
+					}
+					result = '<img id="del" class="del" src="https://lynachen.github.io/plug-ins/img/delete.png" /><img id="img' +currentReViewImgIndex+randomString(1)+randomString(2) +randomString(5) + '" class="show-img" src="' + this.result + '" />';
+					var li = document.createElement('li');
+					li.innerHTML = result;
+					imgList.appendChild(li);
+					index++;
+				}
+			}
+		}
+
+		function onclickimg() {
+			var dataArrlist = dataArr.length;
+			var lilength = document.querySelectorAll('ul#imgList li');
+			for(var i = 0; i < lilength.length; i++) {
+				//删除图标
+				lilength[i].getElementsByTagName('img')[0].onclick = function(num) {
+					return function() {
+						if(dataArr.length == 1) {
+							dataArr = [];
+							$("ul#imgList").html("")
+						} else {
+							$("ul#imgList li:eq(" + num + ")").remove()
+							dataArr.splice(num, 1)
+						}
+					}
+				}(i)
+			}
+		}
+		imgList.addEventListener("click", function() {
+			onclickimg();
+		}, true)
+
+		function send() {
+			for(var j = 0; j < dataArr.length; j++) {
+				console.log(dataArr[j].name)
+				//在这里用ajax提交数据
+			}
+		}
+
+		oSubmit.onclick = function() {
+			if(!dataArr.length) {
+				return alert('请先选择文件');
+			}
+			send();
+		}
+	}
+				
+	</script>
+</body>
+</html>
